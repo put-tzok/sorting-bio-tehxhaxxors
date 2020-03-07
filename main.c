@@ -3,22 +3,78 @@
 #include <stdlib.h>
 #include <time.h>
 
+// dodatkowe metody
+void swap(int *x, int *y){
+    int temp = *x;
+    *x = *y;
+    *y = temp;
+}
+
+// wielkosc instancji
 unsigned int ns[] = { 10, /* TODO: fill in "n" i.e. instance sizes */ };
+
 
 void fill_increasing(int *t, unsigned int n) {
     // TODO: implement
+    int value = 10, counter = 0;
+    for (counter; counter < n; counter++){
+        t[counter] = value;
+        value++;
+    }
 }
 
 void fill_decreasing(int *t, unsigned int n) {
     // TODO: implement
+    int value = 10, counter = 0;
+    for (counter; counter < n; counter++){
+        t[counter] = value;
+        value--;
+    }
 }
 
 void fill_vshape(int *t, unsigned int n) {
     // TODO: implement
+    int value = 10, counter = 0;
+    int symmtery = n/2;
+
+    //wpisuj w array
+    //jesli n jest parzyste
+    if(n % 2 = 0){
+        // OSTRA nierownosc jest wazna, bo zrobimy dodatkowy krok po wszystkich symetrycznych krokach
+        for (counter; counter < n/2; counter++){
+            t[symmtery + counter] = value + counter;
+            t[symmtery - counter] = value + counter;
+        }
+        t[symmtery + counter] = value + counter;
+    }
+    //jesli n jest NIEparzyste
+    else if(n % 2 != 0){
+        // NIEOSTRA nierownosc, bo mamy rowna ilosc krokow po obu stronach punktu symetrii
+        for (counter; counter <= n/2; counter++){
+            t[symmtery + counter] = value + counter;
+            t[symmtery - counter] = value + counter;
+        }   
+    }
 }
 
 void selection_sort(int *t, unsigned int n) {
     // TODO: implement
+
+    // init zmiennych
+    int i, j, min_idx;
+    // petla makro - przesuwanie po naszym array
+    for (i = 0; i < n-1; i++){
+        // porownywany arg to pierwszy arg w danym podarray
+        min_idx = i;
+        // petla mikro - porownywanie args w podarrays
+        for(j = i+1; j < n; j++){
+            if(t[j] < t[min_idx]){
+                min_idx = j;
+            }
+        // zamien najmniejsze z pierwszym
+        swap(&t[min_idx], &t[i]);
+    }
+    
 }
 
 void insertion_sort(int *t, unsigned int n) {
