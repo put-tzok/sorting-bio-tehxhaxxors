@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+// READ/ WRITE FILES
+
 // dodatkowe metody
 void swap(int *x, int *y){
     int temp = *x;
@@ -35,7 +37,7 @@ void kopiec(int *t, int n, int i) {
 }
 
 // wielkosc instancji
-unsigned int ns[] = { 1500, 15000, 15001, 15005, 30000, 35013, 60000, 75000, 90000, 150000 /* TODO: fill in "n" i.e. instance sizes */};
+unsigned int ns[] = { 1500, 3000, 7500, 9000, 15000, 15001, 15005, 17501, 19281, 30000, /* TODO: fill in "n" i.e. instance sizes */};
 
 
 void fill_increasing(int *t, unsigned int n) {
@@ -74,33 +76,6 @@ void fill_vshape(int *t, unsigned int n) {
     if(end - begin == 0) {
         *begin = value + counter;
     }
-    /* STARA WERSJA Z SYMETRIA - kolejnosc na odwrot
-    int symmetry = n/2;
-
-    //wpisuj w array
-    //jesli n jest parzyste
-
-    //if(n % 2 == 0){
-
-    for (counter = 0; counter <= n/2; counter++){
-        t[symmetry + counter] = value + counter;
-        t[symmetry - counter] = value + counter;
-    }
-    if (n%2 == 0){
-        t[symmetry + counter] = value + counter;
-    }
-    */
-
-    //}
-    /*
-    //jesli n jest NIEparzyste
-    else if(n % 2 != 0){
-        for (counter = 0; counter <= n/2; counter++){
-            t[symmetry + counter] = value + counter;
-            t[symmetry - counter] = value + counter;
-        }
-    }
-    */
 
     /* WYPISYWANIE TABLICY
     printf("\nTABLICA fill v-shape: \n");
@@ -269,12 +244,17 @@ char *fill_names[] = { "Random", "Increasing", "Decreasing", "V-Shape" };
 char *sort_names[] = { "SelectionSort", "InsertionSort", "QuickSort", "HeapSort" };
 
 int main() {
+    // ZERO THE FILE - FOR DATA EXTRACTION
+    FILE *data = fopen("data.dat", "w");
+    fclose(data);
+
     for (unsigned int i = 0; i < sizeof(sort_functions) / sizeof(*sort_functions); i++) {
         void (*sort)(int *, unsigned int) = sort_functions[i];
 
         for (unsigned int j = 0; j < sizeof(fill_functions) / sizeof(*fill_functions); j++) {
             void (*fill)(int *, unsigned int) = fill_functions[j];
             void (*check)(int *, unsigned int) = check_functions[j];
+
 
             for (unsigned int k = 0; k < sizeof(ns) / sizeof(*ns); k++) {
                 unsigned int n = ns[k];
@@ -289,8 +269,21 @@ int main() {
                 is_sorted(t, n);
 
                 printf("%15s\t%15s\t%15u\t%15f\n", sort_names[i], fill_names[j], n, (double)(end - begin) / (double) CLOCKS_PER_SEC);
+
+                // APPEND DATA TO FILE
+
+                FILE *data = fopen("data.dat", "a");
+                if(data == NULL){
+                    fprintf(stderr, "\nProblem z otwarciem pliku data!\n");
+                    exit (1);
+                };
+                fprintf(data, "%15s\t%15s\t%15u\t%15f\n", sort_names[i], fill_names[j], n, (double)(end - begin) / (double) CLOCKS_PER_SEC);
+                fclose(data);
+
+
                 free(t);
             }
+
         }
     }
     printf("\nZAKONCZONO POMYSLNIE!\n");
