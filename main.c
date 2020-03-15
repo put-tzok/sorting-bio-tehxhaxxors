@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-// READ/ WRITE FILES
-
 // dodatkowe metody
 void swap(int *x, int *y){
     int temp = *x;
@@ -152,7 +150,17 @@ int podzial(int *t, int n, int l)
     i= i+1;
     swap(&t[n], &t[i]);
     return i;
-    }
+}
+int podzial_random(int *t, int n, int l){
+    // stworz zmienna random
+    srand(time(NULL));
+    int random = l + rand()%(n-l);
+
+    //zamien t[random] z t[l]
+    swap(&t[random], &t[l]);
+
+    return podzial(t, n, l);
+}
 void quick_sort_2(int *t, int n,  int l){
     int pi;
     if(l<n){
